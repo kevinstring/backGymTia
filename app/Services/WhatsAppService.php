@@ -17,7 +17,7 @@ class WhatsAppService
         $this->apiUrl = env('WHATSAPP_API_URL');
     }
 
-    public function sendMessage($to, $templateName, $languageCode = 'en_US')
+    public function sendMessage($to, $templateName, $languageCode = 'es')
     {
         $url = "{$this->apiUrl}/{$this->phoneId}/messages";
 
