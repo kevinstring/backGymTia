@@ -14,14 +14,16 @@ class WhatsAppController extends Controller
         $this->whatsappService = $whatsappService;
     }
 
-    public function sendTemplateMessage(Request $request)
+    public function sendMessage(Request $request)
     {
         $to = $request->input('to');
         $templateName = $request->input('template_name');
         $languageCode = $request->input('language_code', 'es');
-
-        $response = $this->whatsappService->sendMessage($to, $templateName, $languageCode);
-
+        $parameters = $request->input('parameters');  // Recibe los valores para los parámetros
+    
+        // Llamar al servicio para enviar el mensaje
+        $response = $this->whatsappService->sendMessage($to, $templateName, $languageCode, $parameters);
+    
         return response()->json($response);
     }
 }

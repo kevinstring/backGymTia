@@ -17,22 +17,27 @@ class WhatsAppService
         $this->apiUrl = env('WHATSAPP_API_URL');
     }
 
-    public function sendMessage($to, $templateName, $languageCode = 'es')
+    public function sendMessage($to, $templateName, $languageCode = 'es', $parameters = [])
     {
         $url = "{$this->apiUrl}/{$this->phoneId}/messages";
 
-        $response = Http::withToken($this->token)
-            ->post($url, [
-                'messaging_product' => 'whatsapp',
-                'to' => $to,
-                'type' => 'template',
-                'template' => [
-                    'name' => $templateName,
-                    'language' => [
-                        'code' => $languageCode,
-                    ],
-                ],
-            ]);
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post($url, [
+            'messaging_product' => 'whatsapp',
+            'to' => $to,
+            'type' => 'template',
+            'template' => [
+                'name' => $templateName,
+                'language' => ['code' => $languageCode],
+                'components' => [
+                    [
+                        'type' => 'body',
+                        'parameters' => $parameters
+                    ]
+                ]
+            ]
+        ]);
 
         return $response->json();
     }
