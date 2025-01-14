@@ -73,7 +73,7 @@ class gymController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Usuario registrado correctamente','color'=>'text-green-500'], 200);
     //ssss
-
+        //miniCambio
     }
 
     public function getUsuariosInscritos(){
