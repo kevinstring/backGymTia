@@ -18,7 +18,7 @@ class WhatsAppController extends Controller
     {
         $to = $request->input('to');
         $templateName = $request->input('template_name');
-        $languageCode = $request->input('language_code', 'en_US');
+        $languageCode = $request->input('language_code', 'es');
 
         $response = $this->whatsappService->sendMessage($to, $templateName, $languageCode);
 
