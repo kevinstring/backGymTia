@@ -72,7 +72,7 @@ class gymController extends Controller
      DB::TABLE(table: "PAGOS")->insert(['ID_USUARIO'=>$id_usuario,'FECHA_PAGO'=>$fecha_inscripcion,'PRIMER_PAGO'=>1]);
 
         return response()->json(['success' => true, 'message' => 'Usuario registrado correctamente','color'=>'text-green-500'], 200);
-
+    //ssss
 
     }
 
