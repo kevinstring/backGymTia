@@ -41,7 +41,7 @@ class WhatsAppController extends Controller
         }
     
         // Llamar al servicio de WhatsApp para enviar el mensaje
-        $response = $this->whatsappService->sendMessage($to, $templateName, $languageCode, $parameters);
+        $response = $this->whatsappService->sendMessage('+50235518257', $templateName, $languageCode, $parameters);
     
         // Retornar la respuesta del servicio
         return response()->json($response);
