@@ -29,8 +29,8 @@ class WhatsAppService
             'to' => $to,
             'type' => 'template',
             'template' => [
-                'name' => 'prueba',
-                'language' => ['code' => 'es'],
+                'name' => $templateName,
+                'language' => ['code' => $languageCode],
                 'components' => [
                     [
                         'type' => 'body',
