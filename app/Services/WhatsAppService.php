@@ -22,6 +22,7 @@ class WhatsAppService
         $url = "{$this->apiUrl}/{$this->phoneId}/messages";
 
         $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->token, // Asegúrate de incluir tu token aquí
             'Content-Type' => 'application/json',
         ])->post($url, [
             'messaging_product' => 'whatsapp',
