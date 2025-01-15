@@ -20,7 +20,15 @@ class WhatsAppController extends Controller
         $to = $request->input('to'); // El número de teléfono
         $templateName = $request->input('name'); // El nombre de la plantilla
         $languageCode = $request->input('code', 'es'); // El código de idioma (por defecto "es")
-        $parameters = $request->input('parameters'); // Los parámetros del mensaje
+        $parameters = [
+           ['type' => 'body',
+            'parameter_name'=>'name',
+            'text'=>'texto de prueba etiquetar a persona'] ,
+            ['type' => 'body',
+            'parameter_name'=>'dias',
+            'text'=>'50'] ,
+
+        ];
     
         // Asegurarse de que los parámetros sean un array con el formato correcto
         if (!is_array($parameters)) {
