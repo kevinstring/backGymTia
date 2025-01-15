@@ -29,12 +29,11 @@ class WhatsAppService
             'to' => $to,
             'type' => 'template',
             'template' => [
-                'name' => $templateName,
-                'language' => ['code' => $languageCode],
+                'name' => 'prueba',
+                'language' => ['code' => 'es'],
                 'components' => [
                     [
                         'type' => 'body',
-                        
                         'parameters' => $parameters
                     ]
                 ]
