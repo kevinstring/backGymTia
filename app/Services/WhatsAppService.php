@@ -17,10 +17,9 @@ class WhatsAppService
         $this->apiUrl = env('WHATSAPP_API_URL');
     }
 
-    public function sendMessage($to, $templateName, $languageCode = 'es', $parameters = [])
+    public function sendMessage($to, $templateName, $languageCode = 'es', $parameters )
     {
-        $url = "https://graph.facebook.com/v17.0/$this->phoneId}/messages";
-       
+        $url = "{$this->apiUrl}/{$this->phoneId}/messages";
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
