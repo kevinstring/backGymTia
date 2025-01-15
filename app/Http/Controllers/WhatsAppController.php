@@ -17,7 +17,7 @@ class WhatsAppController extends Controller
     public function sendMessage(Request $request)
     {
         $to = $request->input('to');
-        $templateName = $request->input('template_name');
+        $templateName = $request->input('prueba');
         $languageCode = $request->input('language_code', 'es');
         $parameters = $request->input('parameters');  // Recibe los valores para los parámetros
     

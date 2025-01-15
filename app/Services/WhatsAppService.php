@@ -34,6 +34,7 @@ class WhatsAppService
                 'components' => [
                     [
                         'type' => 'body',
+                        
                         'parameters' => $parameters
                     ]
                 ]
