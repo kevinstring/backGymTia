@@ -40,6 +40,17 @@ class WhatsAppService
             ]
         ]);
 
-        return $response->json();
-    }
+
+        if ($response->failed()) {
+            // Manejo del error
+            return [
+                'success' => false,
+                'message' => $response->json(),
+            ];
+        }
+    
+        return [
+            'success' => true,
+            'message' => $response->json(),
+        ];    }
 }
