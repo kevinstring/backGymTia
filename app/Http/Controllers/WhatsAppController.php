@@ -16,14 +16,22 @@ class WhatsAppController extends Controller
 
     public function sendMessage(Request $request)
     {
-        $to = $request->input('to');
-        $templateName = $request->input('name');
-        $languageCode = $request->input('code', 'es');
-        $parameters = $request->input('parameters');  // Recibe los valores para los parámetros
+        // Obtener los datos del request
+        $to = $request->input('to'); // El número de teléfono
+        $templateName = $request->input('name'); // El nombre de la plantilla
+        $languageCode = $request->input('code', 'es'); // El código de idioma (por defecto "es")
+        $parameters = $request->input('parameters'); // Los parámetros del mensaje
     
-        // Llamar al servicio para enviar el mensaje
-        $response = $this->whatsappService->sendMessage($to, $templateName, $languageCode, $parameters);
+        // Asegurarse de que los parámetros sean un array con el formato correcto
+        if (!is_array($parameters)) {
+            return response()->json(['error' => 'El parámetro "parameters" debe ser un array'], 400);
+        }
     
+        // Llamar al servicio de WhatsApp para enviar el mensaje
+        $response = $this->whatsappService->sendMessage( "+50235518257", $templateName, $languageCode, $parameters);
+    
+        // Retornar la respuesta del API de WhatsApp
         return response()->json($response);
     }
+    
 }
