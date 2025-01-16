@@ -16,6 +16,6 @@ class CronJobTest extends Command
 
     public function handle()
     {
-        $this->info('¡El cron job ha funcionado!');
+        $this->info('¡Hola desde Kevin!');
     }
 }
