@@ -86,8 +86,8 @@ class gymController extends Controller
         DB::table('USUARIO_INSCRITO')->insert([
             'ID_USUARIO' => $id_usuario,
             'ID_TIPO_INSCRIPCION' => $tipo_inscripcion,
-            'FECHA_REGRESIVA' => $fecha_inscripcion,
-            'FECHA_SIGUIENTE_PAGO' => $fechaSiguientePago,
+            'FECHA_REGRESIVA' => $fechaInscripcion,
+            'FECHA_SIGUIENTE_PAGO' => $fechaSiguiente,
             'DIAS_PENDIENTES' => $diferencia,
             'MOROSO' => 0
         ]);
