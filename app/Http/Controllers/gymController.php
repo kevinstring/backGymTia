@@ -27,80 +27,55 @@ class gymController extends Controller
     }	
 
     public function guardarCliente(Request $request){
-        // Corroborar que todos los campos no sean null. Nombre, teléfono, tipo_inscripcion, fecha_inscripcion
-        $nombre = $request->input('nombre');
-        $telefono = $request->input('telefono');
-        $tipo_inscripcion = $request->input('tipoInscripcion');
-        $fecha_inscripcion = $request->input('fechaInscripcion');
-    
-        if ($nombre == null || $telefono == null || $tipo_inscripcion == null || $fecha_inscripcion == null) {
-            return response()->json(['success' => false, 'message' => 'Faltan campos por llenar', 'color' => 'text-red-500'], 500);
+        //corroborar que todos los campos no sean null. Nombre, telefono, tipo_inscripcion, fecha_inscripcion
+        $nombre=$request->input('nombre');
+        $telefono=$request->input('telefono');
+        $tipo_inscripcion=$request->input('tipoInscripcion');
+        $fecha_inscripcion=$request->input('fechaInscripcion');
+
+        if($nombre==null || $telefono==null || $tipo_inscripcion==null || $fecha_inscripcion==null){
+            return response()->json(['success' => false, 'message' => 'Faltan campos por llenar','color'=>'text-red-500'], 500);
+
         }
-    
-        switch ($tipo_inscripcion) {
+
+        switch($tipo_inscripcion){
             case 1:
-                // Se calcula la fecha de pago sumando un mes a la fecha de inscripción
-                $fechaSiguientePago = date('Y-m-d', strtotime($fecha_inscripcion . " +1 month"));
+               $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 month"));
                 break;
             case 2:
-                $fechaSiguientePago = date('Y-m-d', strtotime($fecha_inscripcion . " +1 week"));
+                $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 week"));
                 break;
             case 3:
-                $fechaSiguientePago = null;
+                $fechaSiguientePago=null;
                 break;
             case 4:
-                $fechaSiguientePago = null;
+                $fechaSiguientePago=null;
                 break;
             case 5:
-                $fechaSiguientePago = null;
+                $fechaSiguientePago=null;
                 break;
             default:
-                return response()->json(['success' => false, 'message' => 'Tipo de inscripción no válido', 'color' => 'text-red-500'], 500);
+                return response()->json(['success' => false, 'message' => 'Tipo de inscripcion no valido','color'=>'text-red-500'], 500);
         }
-    
+
         if ($fechaSiguientePago) {
-            // Verificamos si la fecha de pago es el 31
-            $fechaPagoDate = new DateTime($fechaSiguientePago);
-            if ($fechaPagoDate->format('d') == 31) {
-                // Si es 31, ajustamos al último día del siguiente mes
-                $fechaPagoDate = new DateTime($fechaSiguientePago . ' +1 month');
-                $fechaPagoDate = new DateTime($fechaPagoDate->format('Y-m') . '-01'); // Primer día del mes siguiente
-                $fechaPagoDate->modify('last day of this month'); // Ajustamos al último día de ese mes
-            }
-    
-            $fechaSiguientePago = $fechaPagoDate->format('Y-m-d');
-            
-            // Calculamos la diferencia de días entre la fecha de inscripción y la fecha de pago
             $fechaInscripcion = new DateTime($fecha_inscripcion);
             $fechaSiguiente = new DateTime($fechaSiguientePago);
+        
+            // Calculamos la diferencia en días
             $diferencia = $fechaInscripcion->diff($fechaSiguiente)->days;
         }
-    
-        // Insertamos los datos en la base de datos
-        $id_usuario = DB::table('USUARIO')->insertGetId([
-            'NOMBRE_COMPLETO' => $nombre,
-            'NUMERO_TELEFONO' => $telefono,
-            'FECHA_INSCRIPCION' => $fecha_inscripcion
-        ]);
-    
-        DB::table('USUARIO_INSCRITO')->insert([
-            'ID_USUARIO' => $id_usuario,
-            'ID_TIPO_INSCRIPCION' => $tipo_inscripcion,
-            'FECHA_REGRESIVA' => $fechaInscripcion,
-            'FECHA_SIGUIENTE_PAGO' => $fechaSiguiente,
-            'DIAS_PENDIENTES' => $diferencia,
-            'MOROSO' => 0
-        ]);
-    
-        DB::table('PAGOS')->insert([
-            'ID_USUARIO' => $id_usuario,
-            'FECHA_PAGO' => $fecha_inscripcion,
-            'PRIMER_PAGO' => 1
-        ]);
-    
-        return response()->json(['success' => true, 'message' => 'Usuario registrado correctamente', 'color' => 'text-green-500'], 200);
+        
+        $id_usuario=DB::table('USUARIO')->insertGetId(['NOMBRE_COMPLETO'=>$nombre,'NUMERO_TELEFONO'=>$telefono,'FECHA_INSCRIPCION'=>$fecha_inscripcion]);
+        DB::table('USUARIO_INSCRITO')->insert(['ID_USUARIO'=>$id_usuario,'ID_TIPO_INSCRIPCION'=>$tipo_inscripcion,'FECHA_REGRESIVA'=>$fecha_inscripcion
+        ,'FECHA_SIGUIENTE_PAGO'=>$fechaSiguientePago,'DIAS_PENDIENTES'=>$diferencia,'MOROSO'=>0]);
+     DB::TABLE(table: "PAGOS")->insert(['ID_USUARIO'=>$id_usuario,'FECHA_PAGO'=>$fecha_inscripcion,'PRIMER_PAGO'=>1]);
+
+        return response()->json(['success' => true, 'message' => 'Usuario registrado correctamente','color'=>'text-green-500'], 200);
+    //ssss
+        //miniCambio
     }
-    
+
     public function getUsuariosInscritos(){
 
         $usuarios=DB::table('USUARIO_INSCRITO')->leftjoin("USUARIO as user", "user.ID_USUARIO",'=','USUARIO_INSCRITO.ID_INSCRIPCION')
