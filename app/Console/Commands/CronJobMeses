@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class CronJobMeses extends Command
 {
-    protected $signature = 'cron:meses';
+    protected $signature = 'time:meses';
     protected $description = 'Comando de prueba para cron job';
 
     public function __construct()

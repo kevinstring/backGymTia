@@ -11,7 +11,6 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         // Otros middlewares globales aquí
-        \App\Http\Middleware\CorsMiddleware::class,
 
 
     ];
@@ -21,7 +20,6 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \App\Http\Middleware\CorsMiddleware::class,
             // Middlewares para rutas web
 
             
