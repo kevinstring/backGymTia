@@ -224,6 +224,8 @@ class gymController extends Controller
 
 public function filtroFechas(Request $request){
     $idFiltro = $request->idFiltro;
+    $startOfWeek = Carbon::now()->startOfWeek(); // Inicio de la semana
+$endOfWeek = Carbon::now()->endOfWeek();     // Fin de la semana
     $totalBanco=0;
     $totalCaja=0;
     $registros = db::table("REGISTROS")
@@ -238,16 +240,19 @@ public function filtroFechas(Request $request){
 
             break;
         case 2:
-            $registros = $registros->whereMonth("FECHA_REGISTRO",Carbon::now()->month)->get();
+            $registros = $registros  ->whereBetween('FECHA_REGISTRO', [$startOfWeek, $endOfWeek])
+            ->get();;
             break;
+       
         case 3:
-            $registros = $registros->whereWeek("FECHA_REGISTRO",Carbon::now()->week)->get();
+            $registros = $registros->whereMonth("FECHA_REGISTRO",Carbon::now()->month)->get();
             break;
         case 4:
             $registros = $registros->whereYear("FECHA_REGISTRO",Carbon::now()->year)->get();
             break;
 
 }
+
 
 foreach($registros as $registro){
     $registro->cambioColor = $registro->ID_TIPO_INGRESO == 1 ? "color:green" : "color:red";
