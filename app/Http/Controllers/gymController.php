@@ -180,7 +180,7 @@ class gymController extends Controller
             return response()->json(['success' => true, 'mensaje' => "Registro ingresado correctamente"], 200);
     
         }else{
-            return response()->json(['success' => false, 'mensaje' => "Ha ocurrido un error"], 500);
+            return response()->json(['error' => true, 'mensaje' => "Ha ocurrido un error"], 500);
      
         }
     }
