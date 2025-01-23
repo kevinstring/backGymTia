@@ -194,9 +194,9 @@ class gymController extends Controller
 
         foreach($registros as $registro){
             if($registro->ID_TIPO_INGRESO==1){
-                $registro->cambioColor="text:green-500";
+                $registro->cambioColor="text-green-500";
         }else{
-            $registro->cambioColor="text:red-500";
+            $registro->cambioColor="text-red-500";
         }
 
         return response()->json($registros);
