@@ -192,8 +192,16 @@ class gymController extends Controller
         ->select("REGISTROS.*","TIPO_INGRESOS.NOMBRE_INGRESO as ingresoEgreso","TIPO_TRANSACCION.NOMBRE_TRANSACCION as transaccion")
         ->get();
 
+        foreach($registros as $registro){
+            if($registro->ID_TIPO_INGRESO==1){
+                $registro->cambioColor="text-green-500";
+        }else{
+            $registro->cambioColor="text-red-500";
+        }
+
         return response()->json($registros);
+    
     }
 
-
+}
 }
