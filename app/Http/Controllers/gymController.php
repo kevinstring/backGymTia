@@ -40,12 +40,12 @@ class gymController extends Controller
 
         switch($tipo_inscripcion){
             case 1:
-               $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 month"));
-               $fechaSig=new DateTime($fechaSiguientePago);
-               if($fechaSig->format('d')=='31'){
-                $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 2 month + 1 day"));
+                $fechaInicial = new DateTime($fecha_inscripcion);
+                if($fechaInicial->format('d')==31){
+                    $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 month"));
                 }
-                break;
+         
+           
             case 2:
                 $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 week"));
                 break;
@@ -139,6 +139,15 @@ class gymController extends Controller
         DB::TABLE(table: "PAGOS")->where('ID_USUARIO', $id_usuario)->where("PRIMER_PAGO",1 )->update(['FECHA_PAGO'=>$fecha_inscripcion]);
 
         return response()->json(['success' => true, 'message' => 'Usuario actualizado correctamente','color'=>'text-green-500'], 200);
+    }
+
+    public function getRegistros(){
+        $tipoTransaccion = db::table("TIPO_TRANSACCION")->get();
+
+        $tipoIngreso = db::table("TIPO_INGRESOS")->get();
+
+        return response()->json(['success' => true, 'transaccion' =>  $tipoTransaccion,'tipoIngreso'=> $tipoIngreso], 200);
+
     }
 
 

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class descontarDias extends Command
 {
@@ -26,26 +27,38 @@ class descontarDias extends Command
      */
     public function handle()
     {
-        //
-        $fechas = DB::table('USUARIO_INSCRITO')->select("FECHA_REGRESIVA","ID_USUARIO","DIAS_PENDIENTES","FECHA_SIGUIENTE_PAGO")->get();
-$diasPendientes = 0;
-        foreach($fechas as $fecha){
+        // Obtén los registros
+        $fechas = DB::table('USUARIO_INSCRITO')
+            ->select("FECHA_REGRESIVA", "ID_USUARIO", "DIAS_PENDIENTES", "FECHA_SIGUIENTE_PAGO")
+            ->get();
+    
+        foreach ($fechas as $fecha) {
             $idusuario = $fecha->ID_USUARIO;
-            $fechaRegresiva = $fecha->FECHA_REGRESIVA;
-            $fechaSiguientePago = $fecha->FECHA_SIGUIENTE_PAGO;
-            $fechaNueva = date('Y-m-d', strtotime($fechaRegresiva . ' + 1 days'));
-            $diasPendientes = (strtotime($fechaSiguientePago) - strtotime($fechaRegresiva)) / 86400;
-
+    
+            // Asegúrate de manejar las fechas correctamente
+            $fechaRegresiva = Carbon::parse($fecha->FECHA_REGRESIVA);
+            $fechaSiguientePago = Carbon::parse($fecha->FECHA_SIGUIENTE_PAGO);
             
-            DB::table('USUARIO_INSCRITO')->where('ID_USUARIO',$idusuario )
-            ->update(['FECHA_REGRESIVA' => $fechaNueva
-            ,'DIAS_PENDIENTES' => $diasPendientes]
-            );
 
+    
+            // Incrementa la fecha regresiva en 1 día
+            $fechaRegresiva->addDay();
+            
+
+
+    
+            // Calcula los días pendientes
+            $diasPendientes = $fechaRegresiva->diffInDays($fechaSiguientePago);
+    
+            // Actualiza la tabla con las nuevas fechas
+            DB::table('USUARIO_INSCRITO')->where('ID_USUARIO', $idusuario)
+                ->update([
+                    'FECHA_REGRESIVA' => $fechaRegresiva->toDateString(), // Asegúrate de guardar como string
+                    'DIAS_PENDIENTES' => $diasPendientes,
+                ]);
         }
-
+    
         $this->info('¡Días descontados!');
-
-
     }
+    
 }
