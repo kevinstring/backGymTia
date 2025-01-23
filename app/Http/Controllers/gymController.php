@@ -189,7 +189,7 @@ class gymController extends Controller
         $registros = db::table("REGISTROS")
         ->join("TIPO_INGRESOS","TIPO_INGRESOS.ID_TIPO_INGRESO","=","REGISTROS.ID_TIPO_INGRESO")
         ->join("TIPO_TRANSACCION","TIPO_TRANSACCION.ID_TIPO_TRANSACCION","=","REGISTROS.ID_TIPO_TRANSACCION")
-        ->select("REGISTROS.*","TIPO_INGRESOS.NOMBRE as ingresoEgreso","TIPO_TRANSACCION.NOMBRE as transaccion")
+        ->select("REGISTROS.*","TIPO_INGRESOS.NOMBRE_INGRESO as ingresoEgreso","TIPO_TRANSACCION.NOMBRE_TRANSACCION as transaccion")
         ->get();
 
         return response()->json($registros);
