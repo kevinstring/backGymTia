@@ -34,6 +34,7 @@ class gymController extends Controller
         $nombre=$request->input('nombre');
         $telefono=$request->input('telefono');
         $tipo_inscripcion=$request->input('tipoInscripcion');
+        $tipo_plan=$request->input('tipoPlan');
         $fecha_inscripcion=$request->input('fechaInscripcion');
 
         if($nombre==null || $telefono==null || $tipo_inscripcion==null || $fecha_inscripcion==null){
@@ -73,8 +74,11 @@ class gymController extends Controller
             $diferencia = $fechaInscripcion->diff($fechaSiguiente)->days;
         }
         
-        $id_usuario=DB::table('USUARIO')->insertGetId(['NOMBRE_COMPLETO'=>$nombre,'NUMERO_TELEFONO'=>$telefono,'FECHA_INSCRIPCION'=>$fecha_inscripcion]);
-        DB::table('USUARIO_INSCRITO')->insert(['ID_USUARIO'=>$id_usuario,'ID_TIPO_INSCRIPCION'=>$tipo_inscripcion,'FECHA_REGRESIVA'=>$fecha_inscripcion
+        $id_usuario=DB::table('USUARIO')->insertGetId(['NOMBRE_COMPLETO'=>$nombre,'NUMERO_TELEFONO'=>$telefono,
+        ,['ID_TIPO_PLAN']=>$tipo_plan,['ID_TIPO_INSCRIPCION']=>$tipo_inscripcion,
+        'FECHA_INSCRIPCION'=>$fecha_inscripcion]);
+        DB::table('USUARIO_INSCRITO')->insert(['ID_USUARIO'=>$id_usuario,
+        ,'FECHA_REGRESIVA'=>$fecha_inscripcion
         ,'FECHA_SIGUIENTE_PAGO'=>$fechaSiguientePago,'DIAS_PENDIENTES'=>$diferencia,'MOROSO'=>0]);
      DB::TABLE(table: "PAGOS")->insert(['ID_USUARIO'=>$id_usuario,'FECHA_PAGO'=>$fecha_inscripcion,'PRIMER_PAGO'=>1]);
 
@@ -100,6 +104,7 @@ class gymController extends Controller
         $tipo_inscripcion=$request->input('tipoInscripcion');
         $fecha_inscripcion=$request->input('fechaInscripcion');
         $fecha_inscripcion=date('Y-m-d',strtotime($fecha_inscripcion));
+        $tipo_plan=$request->input('tipoPlan');
 
         if($nombre==null || $telefono==null || $tipo_inscripcion==null || $fecha_inscripcion==null){
             return response()->json(['success' => false, 'message' => 'Faltan campos por llenar','color'=>'text-red-500'], 500);
@@ -136,8 +141,12 @@ class gymController extends Controller
             $diferencia=0;
         }
         
-        DB::table('USUARIO')->where('ID_USUARIO',$id_usuario)->update(['NOMBRE_COMPLETO'=>$nombre,'NUMERO_TELEFONO'=>$telefono,'FECHA_INSCRIPCION'=>$fecha_inscripcion]);
-        DB::table('USUARIO_INSCRITO')->where('ID_USUARIO',$id_usuario)->update(['ID_TIPO_INSCRIPCION'=>$tipo_inscripcion,'FECHA_REGRESIVA'=>$fecha_inscripcion
+        DB::table('USUARIO')->where('ID_USUARIO',$id_usuario)->update([
+            'NOMBRE_COMPLETO'=>$nombre,'NUMERO_TELEFONO'=>$telefono,
+        ,['ID_TIPO_PLAN']=>$tipo_plan,['ID_TIPO_INSCRIPCION']=>$tipo_inscripcion,
+        'FECHA_INSCRIPCION'=>$fecha_inscripcion]
+        );
+        DB::table('USUARIO_INSCRITO')->where('ID_USUARIO',$id_usuario)->update(['FECHA_REGRESIVA'=>$fecha_inscripcion
         ,'FECHA_SIGUIENTE_PAGO'=>$fechaSiguientePago,'DIAS_PENDIENTES'=>$diferencia,'MOROSO'=>0]);
         DB::TABLE(table: "PAGOS")->where('ID_USUARIO', $id_usuario)->where("PRIMER_PAGO",1 )->update(['FECHA_PAGO'=>$fecha_inscripcion]);
 
