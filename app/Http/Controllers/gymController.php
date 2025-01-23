@@ -199,9 +199,10 @@ class gymController extends Controller
             $registro->cambioColor="text-red-500";
         }
 
-        return response()->json($registros);
     
     }
+    return response()->json($registros);
+
 
 }
 }
