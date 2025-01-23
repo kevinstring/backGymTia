@@ -19,3 +19,4 @@ Route::post('actualizarCliente','App\Http\Controllers\gymController@actualizarCl
 Route::post('/send-whatsapp-message', 'App\Http\Controllers\WhatsAppController@sendMessage');
 Route::get('getTipos', 'App\Http\Controllers\gymController@getTipos');
 Route::post('postRegistro','App\Http\Controllers\gymController@postRegistro');
+Route::post('getRegistros','App\Http\Controllers\gymController@getRegistros');
