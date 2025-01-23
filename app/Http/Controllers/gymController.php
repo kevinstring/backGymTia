@@ -23,9 +23,10 @@ class gymController extends Controller
 
     public function getTipoInscripcion(){
         $modos=DB::table('TIPO_INSCRIPCION')->select("NOMBRE","PRECIO","ID_TIPO_INSCRIPCION")->get();
+        $plan=DB::table('TIPO_PLAN')->select("NOMBRE_PLAN","PRECIO","ID_TIPO_PLAN")->get();
 
 
-        return response()->json($modos);    
+        return response()->json(['modos'=>$modos,'plan'=>$plan]);    
     }	
 
     public function guardarCliente(Request $request){
