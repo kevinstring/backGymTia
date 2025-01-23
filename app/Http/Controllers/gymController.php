@@ -202,13 +202,13 @@ class gymController extends Controller
             $registro->cambioColor = $registro->ID_TIPO_INGRESO == 1 ? "color:green" : "color:red";
     
             if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==1){
-                $totalBanco+=$registro->MONTO;
-            }else if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==2){
-                $totalBanco-=$registro->MONTO;
-            }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==1){
                 $totalCaja+=$registro->MONTO;
-            }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==2){
+            }else if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==2){
+                $totalBanco+=$registro->MONTO;
+            }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==1){
                 $totalCaja-=$registro->MONTO;
+            }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==2){
+                $totalBanco-=$registro->MONTO;
             }
 
 
@@ -251,15 +251,17 @@ public function filtroFechas(Request $request){
 
 foreach($registros as $registro){
     $registro->cambioColor = $registro->ID_TIPO_INGRESO == 1 ? "color:green" : "color:red";
+
     if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==1){
-        $totalBanco+=$registro->MONTO;
-    }else if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==2){
-        $totalBanco-=$registro->MONTO;
-    }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==1){
         $totalCaja+=$registro->MONTO;
-    }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==2){
+    }else if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==2){
+        $totalBanco+=$registro->MONTO;
+    }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==1){
         $totalCaja-=$registro->MONTO;
+    }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==2){
+        $totalBanco-=$registro->MONTO;
     }
+
 
 
 
