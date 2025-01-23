@@ -163,7 +163,7 @@ class gymController extends Controller
         $ingresoegreso==null ||
         $tipoTransaccion==null ||
         $monto==null){
-            return response()->json(['success' => false, 'mensaje' => "Faltan campos por llenar"], 500);
+            return response()->json(['error' => true, 'mensaje' => "Faltan campos por llenar"], 500);
         }
 
         
