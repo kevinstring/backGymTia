@@ -193,12 +193,7 @@ class gymController extends Controller
         ->get();
 
         foreach($registros as $registro){
-            if($registro->ID_TIPO_INGRESO==1){
-                $registro->cambioColor="text-green-500";
-        }else if($registro->ID_TIPO_INGRESO==2){
-            $registro->cambioColor="text-red-500";
-        }
-
+            $registro->cambioColor = $registro->tipoIngreso == 1 ? "color:green" : "color:red";
     
     }
     return response()->json($registros);
