@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use DateTime;
+use Carbon\Carbon;
+
 
 
 class gymController extends Controller
@@ -141,13 +143,39 @@ class gymController extends Controller
         return response()->json(['success' => true, 'message' => 'Usuario actualizado correctamente','color'=>'text-green-500'], 200);
     }
 
-    public function getRegistros(){
+    public function getTipos(){
         $tipoTransaccion = db::table("TIPO_TRANSACCION")->get();
 
         $tipoIngreso = db::table("TIPO_INGRESOS")->get();
 
         return response()->json(['success' => true, 'transaccion' =>  $tipoTransaccion,'tipoIngreso'=> $tipoIngreso], 200);
 
+    }
+
+    public function postRegistro(Request $request){
+        $descripcion = $request->descripcion;
+        $ingresoegreso = $request->ingresoEgreso;
+        $tipoTransaccion = $request->transaccion;
+        $fecha = Carbon::now();
+        $monto=$request->monto;
+
+        
+
+        $insertarRegistro = db::table("REGISTROS")->INSERT([
+            "DESCRIPCION"=>$descripcion,
+            "ID_TIPO_INGRESO"=>$ingresoegreso,
+            "ID_TIPO_TRANSACCION"=>$tipoTransaccion,
+            "FECHA_REGISTRO"=>$fecha,
+            "MONTO"=>$monto
+        ]);
+
+        if($insertarRegistro){
+            return response()->json(['success' => true, 'mensaje' => "Registro ingresado correctamente"], 200);
+    
+        }else{
+            return response()->json(['success' => false, 'mensaje' => "Ha ocurrido un error"], 500);
+     
+        }
     }
 
 
