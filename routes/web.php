@@ -20,3 +20,4 @@ Route::post('/send-whatsapp-message', 'App\Http\Controllers\WhatsAppController@s
 Route::get('getTipos', 'App\Http\Controllers\gymController@getTipos');
 Route::post('postRegistro','App\Http\Controllers\gymController@postRegistro');
 Route::get('getRegistros','App\Http\Controllers\gymController@getRegistros');
+Route::post('filtroFechas','App\Http\Controllers\gymController@filtroFechas');

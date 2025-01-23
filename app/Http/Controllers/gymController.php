@@ -186,17 +186,85 @@ class gymController extends Controller
     }
 
     public function getRegistros(){
+
+
+
         $registros = db::table("REGISTROS")
         ->join("TIPO_INGRESOS","TIPO_INGRESOS.ID_TIPO_INGRESO","=","REGISTROS.ID_TIPO_INGRESO")
         ->join("TIPO_TRANSACCION","TIPO_TRANSACCION.ID_TIPO_TRANSACCION","=","REGISTROS.ID_TIPO_TRANSACCION")
         ->select("REGISTROS.*","TIPO_INGRESOS.NOMBRE_INGRESO as ingresoEgreso","TIPO_TRANSACCION.NOMBRE_TRANSACCION as transaccion")
         ->get();
 
+        $totalBanco=0;
+        $totalCaja=0;
+
         foreach($registros as $registro){
             $registro->cambioColor = $registro->ID_TIPO_INGRESO == 1 ? "color:green" : "color:red";
     
+            if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==1){
+                $totalBanco+=$registro->MONTO;
+            }else if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==2){
+                $totalBanco-=$registro->MONTO;
+            }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==1){
+                $totalCaja+=$registro->MONTO;
+            }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==2){
+                $totalCaja-=$registro->MONTO;
+            }
+
+
+
     }
-    return response()->json($registros);
+
+    
+
+    return response()->json(['registros'=>$registros,'totalBanco'=>$totalBanco,'totalCaja'=>$totalCaja]);
+
+
+}
+
+public function filtroFechas(Request $request){
+    $idFiltro = $request->idFiltro;
+    $totalBanco=0;
+    $totalCaja=0;
+    $registros = db::table("REGISTROS")
+    ->join("TIPO_INGRESOS","TIPO_INGRESOS.ID_TIPO_INGRESO","=","REGISTROS.ID_TIPO_INGRESO")
+    ->join("TIPO_TRANSACCION","TIPO_TRANSACCION.ID_TIPO_TRANSACCION","=","REGISTROS.ID_TIPO_TRANSACCION")
+    ->select("REGISTROS.*","TIPO_INGRESOS.NOMBRE_INGRESO as ingresoEgreso","TIPO_TRANSACCION.NOMBRE_TRANSACCION as transaccion");
+
+    switch($idFiltro){
+        case 1:
+            $registros = $registros->whereDate("FECHA_REGISTRO",Carbon::now())->get();
+  
+
+            break;
+        case 2:
+            $registros = $registros->whereMonth("FECHA_REGISTRO",Carbon::now()->month)->get();
+            break;
+        case 3:
+            $registros = $registros->whereWeek("FECHA_REGISTRO",Carbon::now()->week)->get();
+            break;
+        case 4:
+            $registros = $registros->whereYear("FECHA_REGISTRO",Carbon::now()->year)->get();
+            break;
+
+}
+
+foreach($registros as $registro){
+    $registro->cambioColor = $registro->ID_TIPO_INGRESO == 1 ? "color:green" : "color:red";
+    if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==1){
+        $totalBanco+=$registro->MONTO;
+    }else if($registro->ID_TIPO_INGRESO==1 && $registro->ID_TIPO_TRANSACCION==2){
+        $totalBanco-=$registro->MONTO;
+    }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==1){
+        $totalCaja+=$registro->MONTO;
+    }else if($registro->ID_TIPO_INGRESO==2 && $registro->ID_TIPO_TRANSACCION==2){
+        $totalCaja-=$registro->MONTO;
+    }
+
+
+
+}
+return response()->json(['registros'=>$registros,'totalBanco'=>$totalBanco,'totalCaja'=>$totalCaja]);
 
 
 }
