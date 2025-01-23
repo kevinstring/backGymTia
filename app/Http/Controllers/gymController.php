@@ -159,6 +159,13 @@ class gymController extends Controller
         $fecha = Carbon::now();
         $monto=$request->monto;
 
+        if($descripcion==null ||  
+        $ingresoegreso==null ||
+        $tipoTransaccion==null ||
+        $monto==null){
+            return response()->json(['success' => false, 'mensaje' => "Faltan campos por llenar"], 500);
+        }
+
         
 
         $insertarRegistro = db::table("REGISTROS")->INSERT([
