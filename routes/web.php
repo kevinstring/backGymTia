@@ -17,3 +17,4 @@ Route::post('guardarCliente','App\Http\Controllers\gymController@guardarCliente'
 Route::get('getUsuariosInscritos','App\Http\Controllers\gymController@getUsuariosInscritos');
 Route::post('actualizarCliente','App\Http\Controllers\gymController@actualizarCliente');
 Route::post('/send-whatsapp-message', 'App\Http\Controllers\WhatsAppController@sendMessage');
+Route::get('getRegistros', 'App\Http\Controllers\gymController@getRegistros');
