@@ -73,18 +73,34 @@ class gymController extends Controller
             // Calculamos la diferencia en días
             $diferencia = $fechaInscripcion->diff($fechaSiguiente)->days;
         }
+        $id_usuario = DB::table('USUARIO')->insertGetId([
+            'NOMBRE_COMPLETO' => $nombre,
+            'NUMERO_TELEFONO' => $telefono,
+            'ID_TIPO_PLAN' => $tipo_plan,
+            'ID_TIPO_INSCRIPCION' => $tipo_inscripcion,
+            'FECHA_INSCRIPCION' => $fecha_inscripcion
+        ]);
         
-        $id_usuario=DB::table('USUARIO')->insertGetId(['NOMBRE_COMPLETO'=>$nombre,'NUMERO_TELEFONO'=>$telefono,
-        ,['ID_TIPO_PLAN']=>$tipo_plan,['ID_TIPO_INSCRIPCION']=>$tipo_inscripcion,
-        'FECHA_INSCRIPCION'=>$fecha_inscripcion]);
-        DB::table('USUARIO_INSCRITO')->insert(['ID_USUARIO'=>$id_usuario,
-        ,'FECHA_REGRESIVA'=>$fecha_inscripcion
-        ,'FECHA_SIGUIENTE_PAGO'=>$fechaSiguientePago,'DIAS_PENDIENTES'=>$diferencia,'MOROSO'=>0]);
-     DB::TABLE(table: "PAGOS")->insert(['ID_USUARIO'=>$id_usuario,'FECHA_PAGO'=>$fecha_inscripcion,'PRIMER_PAGO'=>1]);
-
-        return response()->json(['success' => true, 'message' => 'Usuario registrado correctamente','color'=>'text-green-500'], 200);
-    //ssss
-        //miniCambio
+        DB::table('USUARIO_INSCRITO')->insert([
+            'ID_USUARIO' => $id_usuario,
+            'FECHA_REGRESIVA' => $fecha_inscripcion,
+            'FECHA_SIGUIENTE_PAGO' => $fechaSiguientePago,
+            'DIAS_PENDIENTES' => $diferencia,
+            'MOROSO' => 0
+        ]);
+        
+        DB::table('PAGOS')->insert([
+            'ID_USUARIO' => $id_usuario,
+            'FECHA_PAGO' => $fecha_inscripcion,
+            'PRIMER_PAGO' => 1
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario registrado correctamente',
+            'color' => 'text-green-500'
+        ], 200);
+        
     }
 
     public function getUsuariosInscritos(){
