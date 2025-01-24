@@ -47,6 +47,7 @@ class gymController extends Controller
             case 1:
               
                     $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 month"));
+                    break;
        
            
             case 2:
