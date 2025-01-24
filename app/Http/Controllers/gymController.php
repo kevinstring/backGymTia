@@ -44,6 +44,7 @@ class gymController extends Controller
         }
 
         $planesYPrecios=DB::table('TIPO_PLAN')->where('ID_TIPO_PLAN',$tipo_plan)->first();
+        $tipos_inscripcion=DB::table('TIPO_INSCRIPCION')->where('ID_TIPO_INSCRIPCION',$tipo_inscripcion)->first();
      
         $id_usuario = DB::table('USUARIO')->insertGetId([
             'NOMBRE_COMPLETO' => $nombre,
@@ -105,13 +106,38 @@ class gymController extends Controller
                     break;
            
             case 2:
-                $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 week"));
+                $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 2 week"));
+                //solo hay plan para mensualidad. Aqui quiero unicamente agregar el registro.
+                $insertarRegistro= DB::table("REGISTROS")->INSERT([
+                    "DESCRIPCION"=>"Pago quincenal de ".$getUsuario->NOMBRE_COMPLETO,
+                    "ID_TIPO_INGRESO"=>1,
+                    "ID_TIPO_TRANSACCION"=>$formaPago,
+                    "FECHA_REGISTRO"=>$fecha_inscripcion,
+                    "MONTO"=>$tipos_inscripcion->PRECIO
+                ]);
                 break;
             case 3:
-                $fechaSiguientePago=null;
+              $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 week"));
+                //solo hay plan para mensualidad. Aqui quiero unicamente agregar el registro.
+                $insertarRegistro= DB::table("REGISTROS")->INSERT([
+                    "DESCRIPCION"=>"Pago semanal de ".$getUsuario->NOMBRE_COMPLETO,
+                    "ID_TIPO_INGRESO"=>1,
+                    "ID_TIPO_TRANSACCION"=>$formaPago,
+                    "FECHA_REGISTRO"=>$fecha_inscripcion,
+                    "MONTO"=>$tipos_inscripcion->PRECIO
+                ]);
+
                 break;
             case 4:
-                $fechaSiguientePago=null;
+                $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 day"));
+                //solo hay plan para mensualidad. Aqui quiero unicamente agregar el registro.
+                $insertarRegistro= DB::table("REGISTROS")->INSERT([
+                    "DESCRIPCION"=>"Pago diario de ".$getUsuario->NOMBRE_COMPLETO,
+                    "ID_TIPO_INGRESO"=>1,
+                    "ID_TIPO_TRANSACCION"=>$formaPago,
+                    "FECHA_REGISTRO"=>$fecha_inscripcion,
+                    "MONTO"=>$tipos_inscripcion->PRECIO
+                ]);
                 break;
             case 5:
                 $fechaSiguientePago=null;
