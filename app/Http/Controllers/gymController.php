@@ -157,16 +157,31 @@ class gymController extends Controller
             $diferencia=0;
         }
         
-        DB::table('USUARIO')->where('ID_USUARIO',$id_usuario)->update([
-            'NOMBRE_COMPLETO'=>$nombre,'NUMERO_TELEFONO'=>$telefono,
-        ,['ID_TIPO_PLAN']=>$tipo_plan,['ID_TIPO_INSCRIPCION']=>$tipo_inscripcion,
-        'FECHA_INSCRIPCION'=>$fecha_inscripcion]
-        );
-        DB::table('USUARIO_INSCRITO')->where('ID_USUARIO',$id_usuario)->update(['FECHA_REGRESIVA'=>$fecha_inscripcion
-        ,'FECHA_SIGUIENTE_PAGO'=>$fechaSiguientePago,'DIAS_PENDIENTES'=>$diferencia,'MOROSO'=>0]);
-        DB::TABLE(table: "PAGOS")->where('ID_USUARIO', $id_usuario)->where("PRIMER_PAGO",1 )->update(['FECHA_PAGO'=>$fecha_inscripcion]);
-
-        return response()->json(['success' => true, 'message' => 'Usuario actualizado correctamente','color'=>'text-green-500'], 200);
+        DB::table('USUARIO')->where('ID_USUARIO', $id_usuario)->update([
+            'NOMBRE_COMPLETO' => $nombre,
+            'NUMERO_TELEFONO' => $telefono,
+            'ID_TIPO_PLAN' => $tipo_plan,
+            'ID_TIPO_INSCRIPCION' => $tipo_inscripcion,
+            'FECHA_INSCRIPCION' => $fecha_inscripcion
+        ]);
+        
+        DB::table('USUARIO_INSCRITO')->where('ID_USUARIO', $id_usuario)->update([
+            'FECHA_REGRESIVA' => $fecha_inscripcion,
+            'FECHA_SIGUIENTE_PAGO' => $fechaSiguientePago,
+            'DIAS_PENDIENTES' => $diferencia,
+            'MOROSO' => 0
+        ]);
+        
+        DB::table('PAGOS')->where('ID_USUARIO', $id_usuario)->where('PRIMER_PAGO', 1)->update([
+            'FECHA_PAGO' => $fecha_inscripcion
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario actualizado correctamente',
+            'color' => 'text-green-500'
+        ], 200);
+        
     }
 
     public function getTipos(){
