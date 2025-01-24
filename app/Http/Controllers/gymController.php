@@ -36,19 +36,73 @@ class gymController extends Controller
         $tipo_inscripcion=$request->input('tipoInscripcion');
         $tipo_plan=$request->input('tipoPlan');
         $fecha_inscripcion=$request->input('fechaInscripcion');
+        $formaPago=$request->input('formaPago');
 
         if($nombre==null || $telefono==null || $tipo_inscripcion==null || $fecha_inscripcion==null){
             return response()->json(['success' => false, 'message' => 'Faltan campos por llenar','color'=>'text-red-500'], 500);
 
         }
 
+        $planesYPrecios=DB::table('TIPO_PLAN')->where('ID_TIPO_PLAN',$tipo_plan)->first();
+     
+        $id_usuario = DB::table('USUARIO')->insertGetId([
+            'NOMBRE_COMPLETO' => $nombre,
+            'NUMERO_TELEFONO' => $telefono,
+            'ID_TIPO_PLAN' => $tipo_plan,
+            'ID_TIPO_INSCRIPCION' => $tipo_inscripcion,
+            'FECHA_INSCRIPCION' => $fecha_inscripcion
+        ]);
+
+        $getUsuario = DB::table('USUARIO')->where('ID_USUARIO', $id_usuario)->first();
+
 
         switch($tipo_inscripcion){
             case 1:
+                
               
                     $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 month"));
+                
+                    switch($tipo_plan){
+                        case 1:
+                       $insertarRegistro= DB::table("REGISTROS")->INSERT([
+                            "DESCRIPCION"=>"Pago de mensualidad normal de ".$getUsuario->NOMBRE_COMPLETO,
+                            "ID_TIPO_INGRESO"=>1,
+                            "ID_TIPO_TRANSACCION"=>$formaPago,
+                            "FECHA_REGISTRO"=>$fecha_inscripcion,
+                            "MONTO"=>$planesYPrecios->PRECIO
+                        ]);
+                        break;
+                        case 2:
+                            $insertarRegistro= DB::table("REGISTROS")->INSERT([
+                                "DESCRIPCION"=>"Pago de mensualidad Con plan de alimentacion de ".$getUsuario->NOMBRE_COMPLETO,
+                                "ID_TIPO_INGRESO"=>1,
+                                "ID_TIPO_TRANSACCION"=>$formaPago,
+                                "FECHA_REGISTRO"=>$fecha_inscripcion,
+                                "MONTO"=>$planesYPrecios->PRECIO
+                            ]);
+                            break;
+                        case 3:
+                            $insertarRegistro= DB::table("REGISTROS")->INSERT([
+                                "DESCRIPCION"=>"Pago de mensualidad Con plan de Personal trainer de ".$getUsuario->NOMBRE_COMPLETO,
+                                "ID_TIPO_INGRESO"=>1,
+                                "ID_TIPO_TRANSACCION"=>$formaPago,
+                                "FECHA_REGISTRO"=>$fecha_inscripcion,
+                                "MONTO"=>$planesYPrecios->PRECIO
+                            ]);
+                            break;
+                        
+                        case 4:
+                            $insertarRegistro= DB::table("REGISTROS")->INSERT([
+                                "DESCRIPCION"=>"Pago de mensualidad Con plan completo de ".$getUsuario->NOMBRE_COMPLETO,
+                                "ID_TIPO_INGRESO"=>1,
+                                "ID_TIPO_TRANSACCION"=>$formaPago,
+                                "FECHA_REGISTRO"=>$fecha_inscripcion,
+                                "MONTO"=>$planesYPrecios->PRECIO
+                            ]);
+                            break;
+
+                    }
                     break;
-       
            
             case 2:
                 $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 week"));
@@ -73,13 +127,7 @@ class gymController extends Controller
             // Calculamos la diferencia en días
             $diferencia = $fechaInscripcion->diff($fechaSiguiente)->days;
         }
-        $id_usuario = DB::table('USUARIO')->insertGetId([
-            'NOMBRE_COMPLETO' => $nombre,
-            'NUMERO_TELEFONO' => $telefono,
-            'ID_TIPO_PLAN' => $tipo_plan,
-            'ID_TIPO_INSCRIPCION' => $tipo_inscripcion,
-            'FECHA_INSCRIPCION' => $fecha_inscripcion
-        ]);
+
         
         DB::table('USUARIO_INSCRITO')->insert([
             'ID_USUARIO' => $id_usuario,
