@@ -42,13 +42,12 @@ class gymController extends Controller
 
         }
 
+
         switch($tipo_inscripcion){
             case 1:
-                $fechaInicial = new DateTime($fecha_inscripcion);
-                if($fechaInicial->format('d')==31){
+              
                     $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 month"));
-                }
-         
+       
            
             case 2:
                 $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 week"));
