@@ -60,8 +60,15 @@ class gymController extends Controller
         switch($tipo_inscripcion){
             case 1:
                 
-              
+                $fechaInscripcionMes = new DateTime($fecha_inscripcion);
+                if($fechaInscripcionMes->format('d')==31 || ($fechaInscripcionMes->format('d')==28 && $fechaInscripcionMes->format('m')==2)){
+                    $fechaSiguientePago = $fechaInscripcionMes->modify('first day of next month')->modify('last day of this month')->format('Y-m-d');
+
+                }else{
                     $fechaSiguientePago=date('Y-m-d',strtotime($fecha_inscripcion."+ 1 month"));
+
+                }
+              
                 
                     switch($tipo_plan){
                         case 1:
