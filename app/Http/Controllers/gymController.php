@@ -64,13 +64,28 @@ class gymController extends Controller
             
                 $fechaInscripcionMes = new DateTime($fecha_inscripcion);
 
-                // Calcular el próximo pago al mismo día del siguiente mes
-                $fechaSiguientePago = $fechaInscripcionMes->modify('first day of next month')->setDate(
-                    $fechaInscripcionMes->format('Y'),
-                    $fechaInscripcionMes->format('m'),
-                    min($fechaInscripcionMes->format('d'), $fechaInscripcionMes->format('t')) // Ajustar al último día del mes si es necesario
-                )->format('Y-m-d');
+                // Calcular el próximo mes
+                $dia = $fechaInscripcionMes->format('d');
+                $fechaSiguientePago = $fechaInscripcionMes->modify('+1 month');
         
+                // Asegurar que sea el mismo día del siguiente mes
+                $ultimoDiaDelMes = $fechaSiguientePago->format('t'); // Último día del mes
+                if ($dia > $ultimoDiaDelMes) {
+                    $fechaSiguientePago->setDate(
+                        $fechaSiguientePago->format('Y'),
+                        $fechaSiguientePago->format('m'),
+                        $ultimoDiaDelMes
+                    );
+                } else {
+                    $fechaSiguientePago->setDate(
+                        $fechaSiguientePago->format('Y'),
+                        $fechaSiguientePago->format('m'),
+                        $dia
+                    );
+                }
+        
+                // Formatear la fecha
+                $fechaSiguientePago = $fechaSiguientePago->format('Y-m-d');
               
                 
                     switch($tipo_plan){
