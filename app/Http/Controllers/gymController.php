@@ -60,34 +60,25 @@ class gymController extends Controller
         switch($tipo_inscripcion){
             case 1:
                 
-                $fechaInscripcionMes = new DateTime($fecha_inscripcion);
+                $fechaInscripcionMes = Carbon::createFromFormat('Y-m-d', $fecha_inscripcion);
 
-        // Tomar el día original
-        $dia = $fechaInscripcionMes->format('d');
-
-        // Avanzar al siguiente mes
-        $fechaSiguientePago = $fechaInscripcionMes->modify('+1 month');
-
-        // Verificar si el día existe en el siguiente mes
-        $ultimoDiaDelMes = $fechaSiguientePago->format('t'); // Último día del mes
-        if ($dia > $ultimoDiaDelMes) {
-            // Si el día no existe, ajustamos al último día del mes
-            $fechaSiguientePago->setDate(
-                $fechaSiguientePago->format('Y'),
-                $fechaSiguientePago->format('m'),
-                $ultimoDiaDelMes
-            );
-        } else {
-            // Si el día existe, configuramos la misma fecha
-            $fechaSiguientePago->setDate(
-                $fechaSiguientePago->format('Y'),
-                $fechaSiguientePago->format('m'),
-                $dia
-            );
-        }
-
-        // Formatear la fecha
-        $fechaSiguientePago = $fechaSiguientePago->format('Y-m-d');
+                // Tomar el día original
+                $dia = $fechaInscripcionMes->day;
+        
+                // Avanzar un mes y ajustar al mismo día
+                $fechaSiguientePago = $fechaInscripcionMes->copy()->addMonth();
+        
+                // Verificar si el día existe en el mes siguiente
+                if ($dia > $fechaSiguientePago->daysInMonth) {
+                    // Ajustar al último día del mes
+                    $fechaSiguientePago->day = $fechaSiguientePago->daysInMonth;
+                } else {
+                    // Mantener el mismo día
+                    $fechaSiguientePago->day = $dia;
+                }
+        
+                // Convertir a formato Y-m-d
+                $fechaSiguientePago = $fechaSiguientePago->format('Y-m-d');
                 
                     switch($tipo_plan){
                         case 1:
