@@ -62,8 +62,9 @@ class gymController extends Controller
                 
                 $fechaInscripcionMes = Carbon::createFromFormat('Y-m-d', $fecha_inscripcion);
 
-                if($fechaInscripcionMes->format('d')==31 || ($fechaInscripcionMes->format('d')==28 && $fechaInscripcionMes->format('m')==2)){
+                if($fechaInscripcionMes->format('d')==31 ){
     $fechaSiguientePago = $fechaInscripcionMes->modify('first day of next month')->modify('last day of this month')->format('Y-m-d');
+    // $fechaSiguientePago = $fechaInscripcionMes->addMonthNoOverflow(); // Avanza un mes sin desbordar días
 
                 }else{
                     $fechaSiguientePago = $fechaInscripcionMes->addMonthNoOverflow(); // Avanza un mes sin desbordar días
