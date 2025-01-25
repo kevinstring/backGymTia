@@ -62,23 +62,14 @@ class gymController extends Controller
                 
                 $fechaInscripcionMes = Carbon::createFromFormat('Y-m-d', $fecha_inscripcion);
 
-                // Tomar el día original
-                $dia = $fechaInscripcionMes->day;
-        
-                // Avanzar un mes y ajustar al mismo día
-                $fechaSiguientePago = $fechaInscripcionMes->copy()->addMonth();
-        
-                // Verificar si el día existe en el mes siguiente
-                if ($dia > $fechaSiguientePago->daysInMonth) {
-                    // Ajustar al último día del mes
-                    $fechaSiguientePago->day = $fechaSiguientePago->daysInMonth;
-                } else {
-                    // Mantener el mismo día
-                    $fechaSiguientePago->day = $dia;
+                if($fechaInscripcionMes->format('d')==31 || ($fechaInscripcionMes->format('d')==28 && $fechaInscripcionMes->format('m')==2)){
+    $fechaSiguientePago = $fechaInscripcionMes->modify('first day of next month')->modify('last day of this month')->format('Y-m-d');
+
+                }else{
+                    $fechaSiguientePago = $fechaInscripcionMes->addMonthNoOverflow(); // Avanza un mes sin desbordar días
+
                 }
-        
-                // Convertir a formato Y-m-d
-                $fechaSiguientePago = $fechaSiguientePago->format('Y-m-d');
+              
                 
                     switch($tipo_plan){
                         case 1:
