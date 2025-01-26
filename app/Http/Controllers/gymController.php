@@ -21,7 +21,9 @@ class gymController extends Controller
         return response()->json($usuarios);
     }
 
+
     public function getTipoInscripcion(){
+
         $modos=DB::table('TIPO_INSCRIPCION')->select("NOMBRE","PRECIO","ID_TIPO_INSCRIPCION")->get();
         $plan=DB::table('TIPO_PLAN')->select("NOMBRE_PLAN","PRECIO","ID_TIPO_PLAN")->get();
 
@@ -37,6 +39,11 @@ class gymController extends Controller
         $tipo_plan=$request->input('tipoPlan');
         $fecha_inscripcion=$request->input('fechaInscripcion');
         $formaPago=$request->input('formaPago');
+
+        if($tipo_plan==null || ($tipo_plan!==null && $tipo_inscripcion!=1)){
+            $tipo_plan=0;
+
+        }
 
         if($nombre==null || $telefono==null || $tipo_inscripcion==null || $fecha_inscripcion==null){
             return response()->json(['success' => false, 'message' => 'Faltan campos por llenar','color'=>'text-red-500'], 500);
@@ -195,7 +202,7 @@ class gymController extends Controller
         ->join('USUARIO_INSCRITO', 'USUARIO.ID_USUARIO', '=', 'USUARIO_INSCRITO.ID_USUARIO')
         ->select('USUARIO.*', 'TIPO_PLAN.NOMBRE_PLAN', 'TIPO_INSCRIPCION.NOMBRE', 'USUARIO_INSCRITO.FECHA_REGRESIVA', 'USUARIO_INSCRITO.FECHA_SIGUIENTE_PAGO', 'USUARIO_INSCRITO.DIAS_PENDIENTES', 'USUARIO_INSCRITO.MOROSO')
         ->get();
-        
+
         return response()->json($usuarios);
 
     }
